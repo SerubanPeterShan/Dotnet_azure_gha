@@ -16,6 +16,10 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group: 'azure-dev'
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
