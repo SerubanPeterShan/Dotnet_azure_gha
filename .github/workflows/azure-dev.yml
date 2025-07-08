@@ -1,4 +1,3 @@
-name: Azure Developer CLI Deployment
 on:
   workflow_dispatch:
   push:
@@ -26,37 +25,10 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install azd
-        run: |
-          # Install azd using the official installer with fallback
-          if ! command -v azd &> /dev/null; then
-            echo "Installing Azure Developer CLI..."
-            
-            # Primary method - official installer
-            if curl -fsSL https://aka.ms/install-azd.sh | bash; then
-              echo "azd installed successfully via official installer"
-            else
-              echo "Official installer failed, trying alternative method..."
-              
-              # Fallback method - direct download
-              AZD_VERSION="1.5.0"
-              wget -O azd.tar.gz "https://github.com/Azure/azure-dev/releases/download/azure-dev-cli_${AZD_VERSION}/azd-linux-amd64.tar.gz"
-              tar -xzf azd.tar.gz
-              sudo mv azd /usr/local/bin/azd
-              sudo chmod +x /usr/local/bin/azd
-              rm azd.tar.gz
-              echo "azd installed successfully via direct download"
-            fi
-            
-            # Verify installation
-            azd version
-          else
-            echo "azd is already installed"
-            azd version
-          fi
-        shell: bash
+        uses: Azure/setup-azd@v0.1.0
 
       - name: Log in with Azure (Federated Credentials)
         if: ${{ env.AZURE_CLIENT_ID != '' }}
